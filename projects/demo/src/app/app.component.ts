@@ -7,7 +7,11 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-root',
-    imports: [CommonModule, NgxResourceSchedulerModule],
+    imports: [
+      CommonModule,
+      NgxResourceSchedulerModule
+    ],
+    standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })

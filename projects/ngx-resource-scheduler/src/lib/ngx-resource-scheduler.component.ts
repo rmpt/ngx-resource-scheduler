@@ -2,7 +2,6 @@ import {
   Component,
   ChangeDetectionStrategy,
   EventEmitter,
-  HostBinding,
   Input,
   OnChanges,
   Output,
@@ -68,7 +67,6 @@ export class NgxResourceSchedulerComponent implements OnChanges {
 
   // NAVIGATION
   @Input() showToolbar: boolean = true;
-  @Input() todayLabel: string = 'Today';
   @Input() prevLabel: string = '‹';
   @Input() nextLabel: string = '›';
   private lastRangeKey: string | null = null;  
@@ -82,6 +80,7 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Input() showDaysResourcesLabel: boolean = true;
   @Input() daysLabel: string = 'days';
   @Input() resourcesLabel: string = 'resources';
+  @Input() todayLabel: string = 'Today';
 
   // --- MISC ---
   @Input() weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 1;

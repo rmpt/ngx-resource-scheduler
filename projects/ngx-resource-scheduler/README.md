@@ -36,12 +36,12 @@ npm install ngx-resource-scheduler
 ```ts
 startDate = new Date();
 
-resources = [
+resources: SchedulerResource[] = [
   { id: 'r1', title: 'Room A' },
   { id: 'r2', title: 'Room B' },
 ];
 
-events = [
+events: SchedulerEvent[] = [
   {
     id: 'e1',
     title: 'Meeting',
@@ -57,9 +57,9 @@ events = [
 ### Required
 | Input  | Type | Type |
 | ------------- | ------------- | ------------- |
-| startDate  | Date | First visible day (recommended at 00:00) |
-| resources  | SchedulerResource[] | List of schedulable resources
-| events  | SchedulerEvent[] | Events (UTC instants recommended)
+| `startDate`  | Date | First visible day (recommended at 00:00) |
+| `resources`  | SchedulerResource[] | List of schedulable resources
+| `events`  | SchedulerEvent[] | Events (UTC instants recommended)
 
 ### Layout & Range
 
@@ -81,10 +81,24 @@ events = [
 | `slotLineStyle` | `slot` | `slot`, `hour`, or `both` |
 | `readonly` | `false` | Disable interactions |
 | `timezone` | `local` | `local`, `UTC`, or IANA zone (e.g. `Europe/Kiev`) |
+| `weekStartsOn` | `1` | First day of week. 0 = Sunday |
 
 > **Important**
 >
 > Events should be provided as UTC instants. The scheduler converts them for display using timezone.
+
+## i18n
+
+| Input | Default | Description |
+| ------------- | ------------- | ------------- |
+| `showDaysResourcesLabel` | `true` | If the number of days/resources should be shown |
+| `todayLabel` | `Today` | Your translation for "Today" |
+| `daysLabel` | `days` | Your translation for "days" |
+| `resourcesLabel` | `resources` | Your translation for "resources" |
+| `prevLabel` | `<` | Your translation for "<" |
+| `nextLabel` | `>` | Your translation for ">" |
+| `locale` | `null` | Locale to be used in the dates header |
+
 
 ## 🎯 Outputs
 
