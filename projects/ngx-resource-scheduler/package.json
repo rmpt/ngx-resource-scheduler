@@ -14,8 +14,8 @@
     "url": "https://github.com/YOUR_NAME/ngx-resource-scheduler.git"
   },
   "peerDependencies": {
-    "@angular/common": "^18.2.0",
-    "@angular/core": "^18.2.0",
+    "@angular/common": ">=20.0.0 <22.0.0",
+    "@angular/core": ">=20.0.0 <22.0.0",
     "date-fns": ">=3 <5",
     "date-fns-tz": ">=3 <5"
   },

@@ -3,7 +3,9 @@
     Toggle axis ({{ primaryAxis }})
   </button>
 
-  <span *ngIf="loading" style="opacity:.7;">Loading events…</span>
+  @if (loading) {
+    <span style="opacity:.7;">Loading events…</span>
+  }
 </div>
 
 <button (click)="scheduler.prev()">Prev</button>
@@ -39,7 +41,7 @@
   [resourcesLabel]="'pessoas'"
   >
   <!-- [eventTemplate]="myEventTpl" -->
-  
+
 </ngx-resource-scheduler>
 
 
