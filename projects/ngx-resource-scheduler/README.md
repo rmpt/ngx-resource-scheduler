@@ -20,6 +20,9 @@ A lightweight, flexible **resource scheduler** for Angular.
 npm install ngx-resource-scheduler
 ````
 
+## Live example
+Test it [here](https://stackblitz.com/edit/ngx-resource-scheduler?file=src%2Fapp.component.html).
+
 ## 🚀 Basic Usage
 
 ### html
