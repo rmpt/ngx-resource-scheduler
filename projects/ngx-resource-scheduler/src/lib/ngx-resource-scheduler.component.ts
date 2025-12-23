@@ -41,10 +41,11 @@ export interface SchedulerEventTemplateContext {
 }
 
 @Component({
-  selector: 'ngx-resource-scheduler',
-  templateUrl: './ngx-resource-scheduler.component.html',
-  styleUrls: ['./ngx-resource-scheduler.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'ngx-resource-scheduler',
+    templateUrl: './ngx-resource-scheduler.component.html',
+    styleUrls: ['./ngx-resource-scheduler.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NgxResourceSchedulerComponent implements OnChanges {
   // --- REQUIRED ---

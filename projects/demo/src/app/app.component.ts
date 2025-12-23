@@ -6,11 +6,10 @@ import { MockEventsApiService } from './mock-events-api.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, NgxResourceSchedulerModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [CommonModule, NgxResourceSchedulerModule],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
   startDate = this.getMonday(new Date());
