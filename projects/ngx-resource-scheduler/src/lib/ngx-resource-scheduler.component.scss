@@ -1,0 +1,442 @@
+:host {
+  display: block;
+
+  /* Theme tokens */
+  --ngx-bg: #ffffff;
+  --ngx-surface: #ffffff;
+  --ngx-muted: #f6f7f9;
+  --ngx-border: rgba(16, 24, 40, 0.10);
+  --ngx-border-soft: rgba(16, 24, 40, 0.06);
+  --ngx-text: #101828;
+  --ngx-text-muted: rgba(16, 24, 40, 0.60);
+
+  --ngx-radius: 6px;
+
+  --ngx-shadow: 0 10px 25px rgba(16, 24, 40, 0.06);
+  --ngx-shadow-soft: 0 8px 18px rgba(16, 24, 40, 0.05);
+
+  /* Events */
+  --ngx-event-bg: #eef4ff;
+  --ngx-event-border: rgba(53, 122, 246, 0.25);
+  --ngx-event-text: #0b1f44;
+
+  /* Sizing */
+  --ngx-time-gutter-width: 72px;
+  --ngx-header-height: 78px; // includes primary + secondary headers
+  --ngx-primary-title-height: 40px;
+  --ngx-secondary-title-height: 45px;
+
+  /* Layout */
+  background: var(--ngx-bg);
+  color: var(--ngx-text);
+  --ngx-grid-gap: 5px;
+
+  /* Better font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  font-weight: 400;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Inter,
+    Helvetica,
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji";
+}
+
+.ngx-scheduler {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--ngx-grid-gap);
+}
+
+/* ===== Toolbar ===== */
+.ngx-toolbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+
+  padding: 10px 10px 2px 10px;
+}
+
+.ngx-toolbar-title {
+  text-align: center;
+  font-weight: 650;
+  font-size: 14px;
+  color: var(--ngx-text);
+  letter-spacing: 0.2px;
+}
+
+.ngx-toolbar-meta {
+  font-size: 12px;
+  color: var(--ngx-text-muted);
+  padding-right: 6px;
+}
+
+.ngx-toolbar-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ngx-btn {
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 12px;
+
+  border: 1px solid var(--ngx-border);
+  background: #fff;
+  color: var(--ngx-text);
+
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+
+  box-shadow: 0 8px 14px rgba(16, 24, 40, 0.06);
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.ngx-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 18px rgba(16, 24, 40, 0.10);
+}
+
+.ngx-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 14px rgba(16, 24, 40, 0.08);
+}
+
+.ngx-btn--ghost {
+  background: var(--ngx-muted);
+}
+
+/* ===== Header ===== */
+.ngx-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  backdrop-filter: blur(8px);
+  gap: var(--ngx-grid-gap);
+
+  display: grid;
+  grid-template-columns: var(--ngx-time-gutter-width) 1fr;
+  align-items: stretch;
+
+  background: var(--ngx-bg);
+}
+
+/* empty corner */
+.ngx-header .ngx-time-gutter {
+  background: transparent;
+}
+
+
+
+/* Primary column headers (days or resources) */
+.ngx-primary-headers {
+  display: grid;
+  gap: var(--ngx-grid-gap);
+}
+
+.ngx-primary-header {
+  border: 1px solid var(--ngx-border);
+  border-radius: var(--ngx-radius);
+  overflow: hidden;
+  background: var(--ngx-surface);
+  box-shadow: var(--ngx-shadow-soft);
+}
+
+/* Primary title line */
+.ngx-primary-title-row {
+  height: var(--ngx-primary-title-height);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+
+  font-weight: 650;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+
+  border-bottom: 1px solid var(--ngx-border-soft);
+  background: linear-gradient(to bottom, #ffffff, #fbfbfc);
+
+  .ngx-primary-title {
+    margin: auto;
+  }
+}
+
+
+/* Secondary header row (resources or days) */
+.ngx-secondary-header-row {
+  height: var(--ngx-secondary-title-height);
+  display: grid;
+}
+
+.ngx-secondary-header {
+  display: flex;
+  align-items: center;
+  
+  padding: 0 6px;
+
+  font-size: 12px;
+  text-align: center;
+  color: var(--ngx-text-muted);
+
+  border-left: 1px solid var(--ngx-border-soft);
+  background: #ffffff;
+}
+
+.ngx-secondary-header-title {
+  margin: auto;
+}
+
+.ngx-secondary-header:first-child {
+  border-left: none;
+}
+
+/* ===== Body ===== */
+.ngx-body {
+  display: grid;
+  grid-template-columns: var(--ngx-time-gutter-width) 1fr;
+  gap: 10px;
+
+  /* scrolling area */
+  min-height: 320px;
+}
+
+.ngx-time-gutter {
+  position: relative;
+  user-select: none;
+}
+
+.ngx-hour-label {
+  position: absolute;
+  left: 0;
+  right: 8px;
+
+  transform: translateY(-50%);
+  text-align: right;
+
+  font-size: 12px;
+  color: var(--ngx-text-muted);
+  pointer-events: none;
+}
+
+/* Special cases so first and last labels are visible and not clipped */
+.ngx-hour-label:first-child {
+  transform: translateY(0);
+  top: 0 !important;
+}
+.ngx-hour-label:last-child {
+  transform: translateY(-100%);
+}
+
+/* Grid with primary columns */
+.ngx-grid {
+  position: relative;
+  display: grid;
+  gap: var(--ngx-grid-gap);
+}
+
+/* Each primary column looks like a card */
+.ngx-primary-col {
+  border: 1px solid var(--ngx-border);
+  border-radius: var(--ngx-radius);
+  overflow: hidden;
+  background: var(--ngx-surface);
+  box-shadow: var(--ngx-shadow);
+}
+
+/* Secondary columns container inside each primary column */
+.ngx-secondary-cols {
+  display: grid;
+  height: 100%;
+}
+
+/* Individual day/resource cell */
+.ngx-cell {
+  position: relative;
+  border-left: 1px solid var(--ngx-border-soft);
+  background: #ffffff;
+
+  /* Click affordance */
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+.ngx-cell .ngx-event {
+  box-sizing: border-box;
+}
+
+.ngx-cell:first-child {
+  border-left: none;
+}
+
+.ngx-cell:hover {
+  background: rgba(16, 24, 40, 0.02);
+}
+
+/* Grid lines inside each cell */
+.ngx-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ngx-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 1px solid var(--ngx-border-soft);
+  opacity: 0.75;
+}
+
+/* Slot lines are subtler */
+.ngx-line--slot {
+  opacity: 0.5;
+}
+
+/* Slightly stronger at hh:30 */
+.ngx-line--half {
+  opacity: 0.7;
+  border-top-color: rgba(16, 24, 40, 0.09);
+}
+
+/* Hour lines are stronger */
+.ngx-line--hour {
+  opacity: 0.9;
+  border-top-color: rgba(16, 24, 40, 0.10);
+}
+
+.is-hidden {
+  display: none;
+}
+
+/* ===== Events ===== */
+.ngx-event {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  touch-action: none; /* for pointer events */
+  user-select: none;
+
+  min-width: 0;          /* critical so children can shrink */
+  overflow: hidden;      /* keep content inside rounded card */
+
+  position: absolute;
+  /* left/width are computed in TS for overlaps */
+  min-width: 0;
+  margin: 0;
+
+  border-radius: 4px;
+  background: var(--ngx-event-bg);
+  border: 1px solid var(--ngx-event-border);
+  color: var(--ngx-event-text);
+
+  padding: 2px 4px;
+  box-sizing: border-box;
+
+  box-shadow: 0 10px 18px rgba(16, 24, 40, 0.08);
+  cursor: pointer;
+
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+
+
+.ngx-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 22px rgba(16, 24, 40, 0.12);
+  filter: saturate(1.05);
+}
+
+.ngx-event:hover .ngx-resize {
+  opacity: 1;
+}
+
+.ngx-event:active {
+  transform: translateY(0px);
+  box-shadow: 0 10px 18px rgba(16, 24, 40, 0.10);
+  cursor: grabbing;
+}
+
+/* Text inside event */
+.ngx-event-title {
+  font-weight: 650;
+  font-size: 11px;
+  line-height: 1.2;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ngx-event-time {
+  min-width: 0;          /* critical */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 3px;
+  font-size: 10px;
+  color: rgba(11, 31, 68, 0.72);
+}
+
+/* FONT SETUP */
+.ngx-event-time,
+.ngx-toolbar-meta,
+.ngx-secondary-header {
+  letter-spacing: 0.01em;
+}
+
+.ngx-hour,
+.ngx-event-time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Smooth scrollbars (optional) ===== */
+.ngx-body {
+  overflow: auto;
+  padding-bottom: 4px;
+  gap: var(--ngx-grid-gap);
+}
+
+/* Webkit scrollbar styling (Chrome/Safari/Edge) */
+.ngx-body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.ngx-body::-webkit-scrollbar-thumb {
+  background: rgba(16, 24, 40, 0.14);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+}
+.ngx-body::-webkit-scrollbar-track {
+  background: rgba(16, 24, 40, 0.04);
+  border-radius: 10px;
+}
+
+/* ===== Responsive tweaks ===== */
+@media (max-width: 900px) {
+  :host {
+    --ngx-time-gutter-width: 58px;
+  }
+  .ngx-primary-headers,
+  .ngx-grid {
+    display: grid;
+    gap: 10px;
+  }
+  .ngx-primary-headers {
+    padding-left: calc(var(--ngx-grid-gap) / 2);
+    padding-right: calc(var(--ngx-grid-gap) / 2);
+  }
+  .ngx-event {
+    left: 6px;
+    right: 6px;
+    border-radius: 10px;
+  }
+}

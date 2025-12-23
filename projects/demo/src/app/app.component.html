@@ -1,0 +1,55 @@
+<div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
+  <button (click)="primaryAxis = primaryAxis === 'days' ? 'resources' : 'days'">
+    Toggle axis ({{ primaryAxis }})
+  </button>
+
+  <span *ngIf="loading" style="opacity:.7;">Loading events…</span>
+</div>
+
+<button (click)="scheduler.prev()">Prev</button>
+<button (click)="scheduler.today()">Today</button>
+<button (click)="scheduler.next()">Next</button>
+
+<ngx-resource-scheduler
+  #scheduler
+  [nDays]="3"
+  [dayStart]="'08:00'"
+  [dayEnd]="'19:00'"
+  [startDate]="startDate"
+  [resources]="resources"
+  [events]="events"
+  [primaryAxis]="primaryAxis"
+  [showSlotLines]="true"
+  slotLineStyle="both"
+  [timezone]="'Europe/Kiev'"
+
+  [showToolbar]="true"
+
+  (slotClick)="slotCliked($event)"
+  (eventClick)="eventClicked($event)"
+  (eventChange)="eventChanged($event)"
+  (rangeChange)="rangeChanged($event)"
+  (startDateChange)="startDateChanged($event)"
+
+  [eventClass]="eventClass"
+  [eventStyle]="eventStyle"
+
+  [showDaysResourcesLabel]="true"
+  [daysLabel]="'dias'"
+  [resourcesLabel]="'pessoas'"
+  >
+  <!-- [eventTemplate]="myEventTpl" -->
+  
+</ngx-resource-scheduler>
+
+
+<ng-template #myEventTpl let-event let-startZoned="startZoned" let-endZoned="endZoned">
+  <div style="display:flex; flex-direction:column; gap:2px;">
+    <div class="event-title">
+      ✅ {{ event.title }}
+    </div>
+    <div style="font-size:11px; opacity:.8;">
+      {{ startZoned | date:'HH:mm' }}–{{ endZoned | date:'HH:mm' }}
+    </div>
+  </div>
+</ng-template>

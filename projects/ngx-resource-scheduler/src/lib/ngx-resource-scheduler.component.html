@@ -1,0 +1,126 @@
+<div class="ngx-scheduler">
+
+  <!-- Toolbar -->
+  <div class="ngx-toolbar" *ngIf="showToolbar">
+    <div class="ngx-toolbar-left">
+      <button type="button" class="ngx-btn" (click)="navigatePrev()">{{ prevLabel }}</button>
+      <button type="button" class="ngx-btn ngx-btn--ghost" (click)="navigateToday()">{{ todayLabel }}</button>
+      <button type="button" class="ngx-btn" (click)="navigateNext()">{{ nextLabel }}</button>
+    </div>
+
+    <div class="ngx-toolbar-title">
+      {{ rangeTitle }}
+    </div>
+
+    <div class="ngx-toolbar-right">
+      <span class="ngx-toolbar-meta" *ngIf="showDaysResourcesLabel">
+        {{ primaryAxis === 'days' ? (visibleDays.length + ' ' + daysLabel) : (resources.length + ' ' + resourcesLabel ) }}
+      </span>
+      <span class="ngx-toolbar-meta" *ngIf="!showDaysResourcesLabel">&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- Header row -->
+  <div class="ngx-header">
+    <div class="ngx-time-gutter"></div>
+
+    <div class="ngx-primary-headers" [style.gridTemplateColumns]="'repeat(' + primaryColumns.length + ', minmax(0, 1fr))'">
+      <div class="ngx-primary-header" *ngFor="let p of primaryColumns; trackBy: trackPrimary">
+        <div class="ngx-primary-title-row">
+          <div class="ngx-primary-title">{{ p.title }}</div>
+        </div>
+
+        <div class="ngx-secondary-header-row" [style.gridTemplateColumns]="'repeat(' + secondaryColumns.length + ', minmax(0, 1fr))'">
+          <div class="ngx-secondary-header" *ngFor="let s of secondaryColumns; trackBy: trackSecondary">
+            <span class="ngx-secondary-header-title">{{ s.title }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="ngx-body">
+    <!-- time gutter -->
+    <div class="ngx-time-gutter" [style.height.px]="timelineHeightPx">
+      <div
+        class="ngx-hour-label"
+        *ngFor="let h of hourLabels"
+        [style.top.px]="hourTopPx(h)">
+        {{ formatHour(h) }}
+      </div>
+    </div>
+
+
+    <!-- grid -->
+    <div class="ngx-grid"
+         [style.gridTemplateColumns]="'repeat(' + primaryColumns.length + ', minmax(0, 1fr))'"
+         [style.height.px]="timelineHeightPx">
+
+      <div class="ngx-primary-col" *ngFor="let p of primaryColumns; trackBy: trackPrimary">
+        <div class="ngx-secondary-cols"
+             [style.gridTemplateColumns]="'repeat(' + secondaryColumns.length + ', minmax(0, 1fr))'"
+             [style.height.px]="timelineHeightPx">
+
+          <!-- Each cell is (day, resource) regardless of axis order -->
+          <ng-container *ngFor="let s of secondaryColumns; trackBy: trackSecondary">
+            <div class="ngx-cell"
+                #cellEl
+                [style.height.px]="timelineHeightPx"
+                (click)="cellClick(p, s, $event)"
+                [attr.data-day]="cellDayKey(p,s)"
+                [attr.data-resource]="cellResourceId(p,s)">
+
+                <!-- grid lines -->
+                <div class="ngx-lines" aria-hidden="true">
+                  <!-- slot lines -->
+                  <div
+                    class="ngx-line ngx-line--slot"
+                    *ngFor="let line of slotLines"
+                    [style.top.px]="line.top"
+                    [class.ngx-line--half]="line.isHalfHour"
+                    [class.is-hidden]="slotLineStyle === 'hour'">
+                  </div>
+
+                  <!-- hour lines -->
+                  <div
+                    class="ngx-line ngx-line--hour"
+                    *ngFor="let top of hourLineOffsetsPx"
+                    [style.top.px]="top"
+                    [class.is-hidden]="slotLineStyle === 'slot'">
+                  </div>
+                </div>
+
+
+              <!-- events -->
+              <!-- ngClass and 2nd ngStyle are only used when user passes custom class/style -->
+              <div class="ngx-event"
+                *ngFor="let e of cellEvents(p, s); trackBy: trackEvent"
+                [ngStyle]="getEventLayoutStyle(e, p, s)"
+                (click)="onEventClick(e, $event); $event.stopPropagation()"
+                [ngClass]="eventClass ? eventClass(e) : null"
+                [attr.title]="eventTooltip(e)">
+
+                <ng-container
+                  *ngIf="eventTemplate; else defaultEventTpl"
+                  [ngTemplateOutlet]="eventTemplate"
+                  [ngTemplateOutletContext]="eventTemplateCtx(e, p, s)">
+                </ng-container>
+
+                <ng-template #defaultEventTpl>
+                  <div class="ngx-event-title">{{ e.title }}</div>
+                  <div class="ngx-event-time">
+                    {{ toDisplayZone(e.start) | date:'HH:mm' }}–{{ toDisplayZone(e.end) | date:'HH:mm' }}
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </ng-container>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
