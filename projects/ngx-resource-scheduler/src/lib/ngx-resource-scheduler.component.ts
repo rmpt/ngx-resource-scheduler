@@ -83,7 +83,6 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Input() todayLabel: string = 'Today';
 
   // --- MISC ---
-  @Input() weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 1;
   @Input() locale?: string;
   @Input() timezone?: 'local' | 'UTC' | string; // IANA Time Zone Identifier
   @Input() readonly: boolean = false;

@@ -81,7 +81,6 @@ events: SchedulerEvent[] = [
 | `slotLineStyle` | `slot` | `slot`, `hour`, or `both` |
 | `readonly` | `false` | Disable interactions |
 | `timezone` | `local` | `local`, `UTC`, or IANA zone (e.g. `Europe/Kiev`) |
-| `weekStartsOn` | `1` | First day of week. 0 = Sunday |
 
 > **Important**
 >
