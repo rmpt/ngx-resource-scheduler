@@ -1,6 +1,6 @@
 {
   "name": "ngx-resource-scheduler",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Angular scheduler with date columns and nested resource columns or inverted",
   "keywords": [
     "angular",
