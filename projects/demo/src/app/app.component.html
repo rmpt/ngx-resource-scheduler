@@ -38,9 +38,11 @@
 
   [showDaysResourcesLabel]="true"
   [daysLabel]="'dias'"
-  [resourcesLabel]="'pessoas'"
-  >
+  [resourcesLabel]="'pessoas'">
+
   <!-- [eventTemplate]="myEventTpl" -->
+  <!-- [primaryHeaderTemplate]="myHeaderTpl" -->
+  <!-- [secondaryHeaderTemplate]="myHeaderTpl" -->
 
 </ngx-resource-scheduler>
 
@@ -53,5 +55,26 @@
     <div style="font-size:11px; opacity:.8;">
       {{ startZoned | date:'HH:mm' }}–{{ endZoned | date:'HH:mm' }}
     </div>
+  </div>
+</ng-template>
+
+<ng-template #myHeaderTpl let-col
+  let-kind="kind"
+  let-day="day"
+  let-resource="resource">
+  <div [ngClass]="{
+      'header-day': kind === 'day',
+      'header-resource': kind === 'resource'
+    }">
+    @if(kind === 'day') {
+      <ng-container>
+        📅 {{ day | date:'EEE dd' }}
+      </ng-container>
+    }
+    @else {
+      <span>
+        🧔 {{ resource.title }}
+      </span>
+    }
   </div>
 </ng-template>

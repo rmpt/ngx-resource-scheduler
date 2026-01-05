@@ -31,13 +31,31 @@
     <div class="ngx-primary-headers" [style.gridTemplateColumns]="'repeat(' + primaryColumns.length + ', minmax(0, 1fr))'">
       @for (p of primaryColumns; track trackPrimary($index, p)) {
         <div class="ngx-primary-header">
+
+          <!-- PRIMARY TITLE -->
           <div class="ngx-primary-title-row">
-            <div class="ngx-primary-title">{{ p.title }}</div>
+            @if (primaryHeaderTemplate) {
+              <ng-container
+                [ngTemplateOutlet]="primaryHeaderTemplate"
+                [ngTemplateOutletContext]="headerTemplateCtx(p, 'primary', $index)">
+              </ng-container>
+            } @else {
+              <div class="ngx-primary-title">{{ p.title }}</div>
+            }
           </div>
+
+          <!-- SECONDARY TITLE -->
           <div class="ngx-secondary-header-row" [style.gridTemplateColumns]="'repeat(' + secondaryColumns.length + ', minmax(0, 1fr))'">
             @for (s of secondaryColumns; track trackSecondary($index, s)) {
               <div class="ngx-secondary-header">
-                <span class="ngx-secondary-header-title">{{ s.title }}</span>
+                @if (secondaryHeaderTemplate) {
+                  <ng-container
+                    [ngTemplateOutlet]="secondaryHeaderTemplate"
+                    [ngTemplateOutletContext]="headerTemplateCtx(s, 'secondary', $index)">
+                  </ng-container>
+                } @else {
+                  <span class="ngx-secondary-header-title">{{ s.title }}</span>
+                }
               </div>
             }
           </div>

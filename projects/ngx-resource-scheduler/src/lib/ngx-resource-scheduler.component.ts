@@ -22,13 +22,12 @@ import {
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 import { PositionedEvent } from './internal/types-internal';
 
-type PrimaryColumn =
+type Column =
   | { kind: 'day'; day: Date; key: string; title: string }
   | { kind: 'resource'; resource: SchedulerResource; key: string; title: string };
 
-type SecondaryColumn =
-  | { kind: 'day'; day: Date; key: string; title: string }
-  | { kind: 'resource'; resource: SchedulerResource; key: string; title: string };
+type PrimaryColumn = Column;
+type SecondaryColumn = Column;
 
 export interface SchedulerEventTemplateContext {
   $implicit: PositionedEvent; // allows: let-event
@@ -37,6 +36,31 @@ export interface SchedulerEventTemplateContext {
   endZoned: Date;
   resourceId: string;
   day: Date;
+}
+
+export interface SchedulerHeaderTemplateContext {
+  /** The column being rendered (either day or resource) */
+  $implicit: PrimaryColumn | SecondaryColumn;   // allows: let-col
+  col: PrimaryColumn | SecondaryColumn;
+
+  /** Convenience fields so consumers don't have to switch on kind */
+  kind: 'day' | 'resource';
+  title: string;
+
+  // present only when kind === 'day'
+  day?: Date;
+  dayKey?: string;
+
+  // present only when kind === 'resource'
+  resource?: SchedulerResource;
+  resourceId?: string;
+
+  /** Positioning info */
+  axis: 'primary' | 'secondary';
+  index: number;
+
+  /** Current scheduler axis mode (days vs resources primary) */
+  primaryAxis: PrimaryAxis;
 }
 
 @Component({
@@ -75,6 +99,8 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Input() eventTemplate?: TemplateRef<SchedulerEventTemplateContext>;
   @Input() eventClass?: (e: PositionedEvent) => string | string[] | Set<string> | { [klass: string]: any };
   @Input() eventStyle?: (e: PositionedEvent) => { [k: string]: any };
+  @Input() primaryHeaderTemplate?: TemplateRef<SchedulerHeaderTemplateContext>;
+  @Input() secondaryHeaderTemplate?: TemplateRef<SchedulerHeaderTemplateContext>;
 
   // i18n
   @Input() showDaysResourcesLabel: boolean = true;
@@ -95,7 +121,7 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Output() startDateChange = new EventEmitter<Date>();
 
   // --- INTERNAL LAYOUT CONSTANTS ---
-  readonly pxPerMinute = 1; // 60px per hour
+  readonly pxPerMinute = 2; // 120px per hour
 
   // --- COMPUTED ---
   visibleDays: Date[] = [];
@@ -645,6 +671,37 @@ export class NgxResourceSchedulerComponent implements OnChanges {
       day,
     };
   }
+
+  headerTemplateCtx(
+    col: PrimaryColumn | SecondaryColumn,
+    axis: 'primary' | 'secondary',
+    index: number
+  ): SchedulerHeaderTemplateContext {
+    const base = {
+      $implicit: col,
+      col,
+      kind: col.kind,
+      title: col.title,
+      axis,
+      index,
+      primaryAxis: this.primaryAxis,
+    } as SchedulerHeaderTemplateContext;
+
+    if (col.kind === 'day') {
+      return {
+        ...base,
+        day: col.day,
+        dayKey: col.key,
+      };
+    }
+
+    return {
+      ...base,
+      resource: col.resource,
+      resourceId: col.resource.id,
+    };
+  }
+
 
   // ------------- TRACK BYS -------------
   
