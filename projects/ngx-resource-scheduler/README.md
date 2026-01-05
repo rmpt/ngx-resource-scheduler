@@ -84,6 +84,7 @@ events: SchedulerEvent[] = [
 | `slotLineStyle` | `slot` | `slot`, `hour`, or `both` |
 | `readonly` | `false` | Disable interactions |
 | `timezone` | `local` | `local`, `UTC`, or IANA zone (e.g. `Europe/Kiev`) |
+| `todayColor` | `#fffadf` | Any valid css color to be applied as today background color. |
 
 > **Important**
 >
@@ -132,7 +133,9 @@ You can hide the toolbar and control navigation from outside the scheduler.
 
 No date math required.
 
-## 🎨 Custom Event Template
+## 🎨 Custom Template
+
+### Event template
 
 You can fully customize how events are rendered.
 
@@ -156,7 +159,7 @@ You can fully customize how events are rendered.
 </ng-template>
 ```
 
-### Template Context
+#### Event template Context
 
 | Variable | Description |
 | ------------- | ------------- |
@@ -165,6 +168,55 @@ You can fully customize how events are rendered.
 | `endZoned` | End date in scheduler timezone |
 | `resourceId` | Resource id |
 | `day` | Day of the cell |
+
+### Primary/secondary header template
+
+You can fully customize how days/resources headers are rendered.
+
+```html
+<ngx-resource-scheduler
+  [events]="events"
+  [primaryHeaderTemplate]="headerTpl"
+  [secondaryHeaderTemplate]="headerTpl">
+</ngx-resource-scheduler>
+
+<ng-template #headerTpl let-col
+  let-kind="kind"
+  let-day="day"
+  let-resource="resource">
+  <div [ngClass]="{
+      'header-day': kind === 'day',
+      'header-resource': kind === 'resource'
+    }">
+    @if(kind === 'day') {
+      <ng-container>
+        📅 {{ day | date:'EEE dd' }}
+      </ng-container>
+    }
+    @else {
+      <span>
+        🧔 {{ resource.title }}
+      </span>
+    }
+  </div>
+</ng-template>
+```
+
+#### Header template Context
+
+| Variable | Description |
+| ------------- | ------------- |
+| `column` / `$implicit` | The primary/secondary column |
+| `kind` | `day` or `resource` |
+| `title` | The column title |
+| `day` | Present only when `kind === 'day'` |
+| `dayKey` | Present only when `kind === 'day'` |
+| `resource` | `SchedulerResource` instance. Present only when `kind === 'resource'` |
+| `resourceId` | Present only when `kind === 'resource'` |
+| `axis` | `primary` or `secondary` |
+| `axis` | `primary` or `secondary` |
+| `index` | Current header index |
+| `primaryAxis` | Current scheduler axis mode (days vs resources) |
 
 ## 🧩 Styling Events
 
