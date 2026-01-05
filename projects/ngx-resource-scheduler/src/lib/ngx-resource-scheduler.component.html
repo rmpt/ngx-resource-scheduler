@@ -13,9 +13,27 @@
       </div>
       <div class="ngx-toolbar-right">
         @if (showDaysResourcesLabel) {
+          @if(showNdaysControl) {
+            <button
+              class="ngx-primary-header-days-control"
+              aria-label="decrease days"
+              [ngClass]="{ 'hide': nDays <= 1}"
+              (click)="setNDays(nDays - 1)">
+              −
+            </button>
+          }
           <span class="ngx-toolbar-meta">
-            {{ primaryAxis === 'days' ? (visibleDays.length + ' ' + daysLabel) : (resources.length + ' ' + resourcesLabel ) }}
+            {{ visibleDays.length + ' ' + daysLabel }}
           </span>
+          @if(showNdaysControl) {
+            <button
+              class="ngx-primary-header-days-control"
+              aria-label="increase days"
+              [ngClass]="{ 'hide': nDays >= 7}"
+              (click)="setNDays(nDays + 1)">
+              +
+            </button>
+          }
         }
         @if (!showDaysResourcesLabel) {
           <span class="ngx-toolbar-meta">&nbsp;</span>

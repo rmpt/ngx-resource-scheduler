@@ -36,12 +36,14 @@
   [eventClass]="eventClass"
   [eventStyle]="eventStyle"
 
-  [todayColor]="'aquamarine'"
+  [showNdaysControl]="false"
+  (nDaysChange)="nDaysChanged($event)"
 
   [showDaysResourcesLabel]="true"
   [daysLabel]="'dias'"
   [resourcesLabel]="'pessoas'">
 
+  <!-- [todayColor]="'aquamarine'" -->
   <!-- [eventTemplate]="myEventTpl" -->
   <!-- [primaryHeaderTemplate]="myHeaderTpl" -->
   <!-- [secondaryHeaderTemplate]="myHeaderTpl" -->

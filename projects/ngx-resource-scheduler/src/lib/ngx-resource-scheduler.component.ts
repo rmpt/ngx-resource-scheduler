@@ -7,6 +7,8 @@ import {
   Output,
   SimpleChanges,
   TemplateRef,
+  Inject,
+  PLATFORM_ID,
 } from '@angular/core';
 
 import {
@@ -21,6 +23,7 @@ import {
 
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 import { PositionedEvent } from './internal/types-internal';
+import { isPlatformBrowser } from '@angular/common';
 
 
 @Component({
@@ -68,6 +71,7 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Input() daysLabel: string = 'days';
   @Input() resourcesLabel: string = 'resources';
   @Input() todayLabel: string = 'Today';
+  @Input() showNdaysControl: boolean = true;
 
   // --- MISC ---
   @Input() locale?: string;
@@ -80,6 +84,7 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Output() eventChange = new EventEmitter<any>();
   @Output() rangeChange = new EventEmitter<SchedulerRangeChange>();
   @Output() startDateChange = new EventEmitter<Date>();
+  @Output() nDaysChange = new EventEmitter<number>();
 
   // --- INTERNAL LAYOUT CONSTANTS ---
   readonly pxPerMinute = 2; // 120px per hour
@@ -93,6 +98,10 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   dayStartMinutes = 8 * 60;
   dayEndMinutes = 20 * 60;
   slotMinutes = 30;
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {}
 
   ngOnChanges(_: SimpleChanges): void {
     this.recompute();
@@ -306,7 +315,6 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   getTodayBackgroundColor(primary: Column, secondary: Column): string | undefined {
     const isToday = this.isToday(primary, secondary);
     const finalColor = this.isValidCssColor(this.todayColor) ? this.todayColor : '#fffadf';
-    console.log('final color', finalColor);
     return isToday ? finalColor : undefined;
   }
 
@@ -543,6 +551,17 @@ export class NgxResourceSchedulerComponent implements OnChanges {
     this.setStartDate(today);
   }
 
+  setNDays(n: number) {
+    const newNdays = Math.max(1, Math.min(7, n));
+    if(newNdays == this.nDays) {
+      return;
+    }
+
+    this.nDays = newNdays;
+    this.recompute();
+    this.nDaysChange.emit(this.nDays);
+  }
+
   // ---------- DATE/TIME UTILS ----------
 
   formatHour(h: number): string {
@@ -688,10 +707,14 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   private isValidCssColor(value?: string): boolean {
     if (!value) return false;
 
-    const s = new Option().style;
+    // SSR: can't validate with DOM APIs
+    if (!isPlatformBrowser(this.platformId)) {
+      return true;
+    }
+
+    const s = document.createElement('span').style;
     s.color = value;
 
-    console.log('is valid color', value, s.color);
     return s.color !== '';
   }
 

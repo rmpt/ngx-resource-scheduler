@@ -137,7 +137,6 @@
 }
 
 
-
 /* Primary column headers (days or resources) */
 .ngx-primary-headers {
   display: grid;
@@ -172,6 +171,39 @@
   }
 }
 
+.ngx-primary-header-days-control {
+  /* DON'T use all: unset */
+  appearance: none;
+  border: none;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+
+  font-size: 11px;
+  line-height: 1;
+
+  background: currentColor;
+  background-color: lightgray;
+  color: gray;
+
+  cursor: pointer;
+  vertical-align: middle;
+  margin: 0 4px;
+
+  :hover {
+    opacity: 0.85;
+  }
+  
+  &.hide {
+    opacity: 0;
+    cursor: default;
+  }
+}
 
 /* Secondary header row (resources or days) */
 .ngx-secondary-header-row {

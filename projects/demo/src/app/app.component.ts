@@ -48,6 +48,10 @@ export class AppComponent {
     this.events = this.events.map(e => e.id === eventChange.event.id ? eventChange.event : e);
   }
 
+  nDaysChanged(nDays: number) {
+    console.log('n days changed:', nDays);
+  }
+
   rangeChanged(rangeChange: SchedulerRangeChange) {
     const key = `${rangeChange.start.toISOString()}_${rangeChange.end.toISOString()}`;
     if (key === this.lastRangeKey) return;
