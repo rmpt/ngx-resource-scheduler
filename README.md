@@ -40,5 +40,13 @@ Build the library: `ng build ngx-resource-scheduler`
 
 Run the demo app: `ng serve demo`
 
+## Screenshots
 
+<img width="773" height="495" alt="imagem" src="https://github.com/user-attachments/assets/5b16a125-12a4-4167-be36-0a0576b32b03" /> \
 
+Or with custom styles:
+
+<img width="773" height="495" alt="imagem" src="https://github.com/user-attachments/assets/9704a0a5-9e26-441c-b75e-74ccfbdbbe8b" />
+
+## Live example
+Test it [here](https://stackblitz.com/edit/ngx-resource-scheduler?file=src%2Fapp.component.html).
