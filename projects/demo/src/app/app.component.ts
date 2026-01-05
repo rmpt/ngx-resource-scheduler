@@ -49,8 +49,6 @@ export class AppComponent {
   }
 
   rangeChanged(rangeChange: SchedulerRangeChange) {
-    console.log('rangeChanged: ', rangeChange);
-
     const key = `${rangeChange.start.toISOString()}_${rangeChange.end.toISOString()}`;
     if (key === this.lastRangeKey) return;
     this.lastRangeKey = key;

@@ -378,7 +378,10 @@
 }
 
 .ngx-event-time {
-  min-width: 0;          /* critical */
+  min-width: 0;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

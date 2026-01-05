@@ -95,9 +95,3 @@ export interface SchedulerRangeChange {
   /** Current view identifier (v1 uses custom-range). */
   view: SchedulerView;
 }
-
-/** Optional simple renderer hooks (string return keeps it light for v1). */
-export type EventRenderer = (args: { event: SchedulerEvent }) => string;
-
-export type HeaderRenderer =
-  (args: { type: 'day' | 'resource'; day?: Date; resource?: SchedulerResource }) => string;
