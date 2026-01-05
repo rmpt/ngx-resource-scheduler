@@ -93,6 +93,8 @@
               <div class="ngx-cell"
                 #cellEl
                 [style.height.px]="timelineHeightPx"
+                [style.--today-bg]="getTodayBackgroundColor(p, s)"
+                [ngClass]="{ 'today': isToday(p, s) }"
                 (click)="cellClick(p, s, $event)"
                 [attr.data-day]="cellDayKey(p,s)"
                 [attr.data-resource]="cellResourceId(p,s)">

@@ -269,7 +269,12 @@
   /* Click affordance */
   cursor: pointer;
   transition: background 120ms ease;
+
+  &.today {
+    background-color: var(--today-bg);
+  }
 }
+
 .ngx-cell .ngx-event {
   box-sizing: border-box;
 }
