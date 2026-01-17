@@ -42,6 +42,9 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   // --- FLEXIBILITY ---
   @Input() nDays: number = 7; // clamp [1..7]
   @Input() primaryAxis: PrimaryAxis = 'days';
+  @Input() showDaysLabel: boolean = true;
+  @Input() showNdaysControl: boolean = true;
+  @Input() showSwapPrimaryAxis: boolean = true;
 
   // --- TIME WINDOW (vertical) ---
   @Input() dayStart: string = '08:00'; // HH:mm
@@ -67,11 +70,9 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Input() todayColor?: string;
 
   // i18n
-  @Input() showDaysResourcesLabel: boolean = true;
   @Input() daysLabel: string = 'days';
   @Input() resourcesLabel: string = 'resources';
   @Input() todayLabel: string = 'Today';
-  @Input() showNdaysControl: boolean = true;
 
   // --- MISC ---
   @Input() locale?: string;
@@ -85,6 +86,7 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Output() rangeChange = new EventEmitter<SchedulerRangeChange>();
   @Output() startDateChange = new EventEmitter<Date>();
   @Output() nDaysChange = new EventEmitter<number>();
+  @Output() primaryAxisChange = new EventEmitter<PrimaryAxis>();
 
   // --- INTERNAL LAYOUT CONSTANTS ---
   readonly pxPerMinute = 2; // 120px per hour
@@ -560,6 +562,12 @@ export class NgxResourceSchedulerComponent implements OnChanges {
     this.nDays = newNdays;
     this.recompute();
     this.nDaysChange.emit(this.nDays);
+  }
+
+  swapPrimaryAxis() {
+    this.primaryAxis = this.primaryAxis == 'days' ? 'resources' : 'days';
+    this.recompute();
+    this.primaryAxisChange.emit(this.primaryAxis);
   }
 
   // ---------- DATE/TIME UTILS ----------

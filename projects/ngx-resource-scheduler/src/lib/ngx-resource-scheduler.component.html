@@ -12,7 +12,7 @@
         {{ rangeTitle }}
       </div>
       <div class="ngx-toolbar-right">
-        @if (showDaysResourcesLabel) {
+        @if (showDaysLabel) {
           @if(showNdaysControl) {
             <button
               class="ngx-primary-header-days-control"
@@ -35,7 +35,7 @@
             </button>
           }
         }
-        @if (!showDaysResourcesLabel) {
+        @if (!showDaysLabel) {
           <span class="ngx-toolbar-meta">&nbsp;</span>
         }
       </div>
@@ -44,7 +44,13 @@
 
   <!-- Header row -->
   <div class="ngx-header">
-    <div class="ngx-time-gutter"></div>
+    <div class="ngx-time-gutter">
+      @if (showSwapPrimaryAxis) {
+        <div class="ngx-toolbar-meta swap" (click)="swapPrimaryAxis()">
+          <span class="icon">🔄</span>
+        </div>
+      }
+    </div>
 
     <div class="ngx-primary-headers" [style.gridTemplateColumns]="'repeat(' + primaryColumns.length + ', minmax(0, 1fr))'">
       @for (p of primaryColumns; track trackPrimary($index, p)) {

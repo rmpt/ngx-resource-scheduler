@@ -434,6 +434,18 @@
   letter-spacing: 0.01em;
 }
 
+.ngx-time-gutter .swap {
+  display: flex;
+  cursor: pointer;
+  margin-top: 50%;
+  margin-left: 50%;
+  font-size: 20px;
+
+  .icon:active {
+    transform: translateY(1px);
+  }
+}
+
 .ngx-hour,
 .ngx-event-time {
   font-variant-numeric: tabular-nums;

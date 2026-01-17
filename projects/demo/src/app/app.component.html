@@ -26,6 +26,8 @@
   [timezone]="'Europe/Kiev'"
 
   [showToolbar]="true"
+  [showNdaysControl]="true"
+  [showSwapPrimaryAxis]="true"
 
   (slotClick)="slotCliked($event)"
   (eventClick)="eventClicked($event)"
@@ -36,10 +38,9 @@
   [eventClass]="eventClass"
   [eventStyle]="eventStyle"
 
-  [showNdaysControl]="false"
   (nDaysChange)="nDaysChanged($event)"
 
-  [showDaysResourcesLabel]="true"
+  [showDaysLabel]="true"
   [daysLabel]="'dias'"
   [resourcesLabel]="'pessoas'">
 
