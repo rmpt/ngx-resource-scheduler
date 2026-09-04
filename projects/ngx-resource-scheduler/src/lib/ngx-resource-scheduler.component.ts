@@ -313,12 +313,11 @@ export class NgxResourceSchedulerComponent implements OnChanges {
 
   getEventLayoutStyle(e: PositionedEvent, p: any, s: any) {
     const day = this.resolveCellDay(p, s);
+    return this.styleForEvent(e, day); // top, height, left, width
+  }
 
-    const layout = this.styleForEvent(e, day); // contains top/height/left/width
-    const userStyle = this.eventStyle ? this.eventStyle(e) : null;
-
-    // IMPORTANT: layout must win so users can’t break positioning
-    return userStyle ? { ...userStyle, ...layout } : layout;
+  getUserEventStyle(e: PositionedEvent) {
+    return this.eventStyle ? this.eventStyle(e) : null;
   }
 
   getTodayBackgroundColor(primary: Column, secondary: Column): string | undefined {

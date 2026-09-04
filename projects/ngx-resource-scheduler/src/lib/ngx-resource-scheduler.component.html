@@ -159,6 +159,7 @@
                     <!-- Inner element: Handles CDK Drag ONLY -->
                     <div class="ngx-event"
                       cdkDrag
+                      [ngStyle]="getUserEventStyle(e)"
                       [cdkDragDisabled]="!dragDropEnabled"
                       [cdkDragData]="e"
                       (click)="onEventClick(e, $event); $event.stopPropagation()"
