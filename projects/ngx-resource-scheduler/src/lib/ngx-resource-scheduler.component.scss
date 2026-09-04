@@ -309,6 +309,13 @@
 
 .ngx-cell .ngx-event {
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+
+.ngx-event-wrapper {
+  position: absolute;
+  box-sizing: border-box;
 }
 
 .ngx-cell:first-child {
@@ -491,5 +498,27 @@
     left: 6px;
     right: 6px;
     border-radius: 10px;
+  }
+}
+
+::ng-deep {
+  .cdk-drag-animating {
+    transition: transform 0s !important;
+  }
+
+  /* Completely remove :hover style of the candidate target when dragging an event. */
+  .cdk-drop-list-receiving,
+  .cdk-drop-list-dragging {
+    background-color: transparent !important;
+    background: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Neutralize the placeholder inserted into candidate drop slots */
+  .cdk-drag-placeholder {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    display: none !important;
   }
 }

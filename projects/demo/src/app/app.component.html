@@ -42,7 +42,10 @@
 
   [showDaysLabel]="true"
   [daysLabel]="'dias'"
-  [resourcesLabel]="'pessoas'">
+  [resourcesLabel]="'pessoas'"
+  
+  [dragDropEnabled]="true"
+  (eventDropped)="eventDropped($event)">
 
   <!-- [todayColor]="'aquamarine'" -->
   <!-- [eventTemplate]="myEventTpl" -->

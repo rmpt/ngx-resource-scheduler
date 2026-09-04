@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DEMO_RESOURCES } from './demo-data.resources';
 import { PrimaryAxis } from '../../../ngx-resource-scheduler/src/public-api';
-import { NgxResourceSchedulerModule, SchedulerEvent, SchedulerRangeChange } from 'ngx-resource-scheduler';
+import { EventDropped, NgxResourceSchedulerModule, SchedulerEvent, SchedulerRangeChange } from 'ngx-resource-scheduler';
 import { MockEventsApiService } from './mock-events-api.service';
 import { CommonModule } from '@angular/common';
 
@@ -46,6 +46,10 @@ export class AppComponent {
   eventChanged(eventChange: any) {
     console.log('eventChanged: ', eventChange);
     this.events = this.events.map(e => e.id === eventChange.event.id ? eventChange.event : e);
+  }
+
+  eventDropped(event: EventDropped) {
+    console.log("eventDropped: ", event);
   }
 
   nDaysChanged(nDays: number) {

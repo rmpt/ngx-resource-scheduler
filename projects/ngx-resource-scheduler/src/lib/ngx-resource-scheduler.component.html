@@ -104,6 +104,9 @@
 
     <!-- grid -->
     <div class="ngx-grid"
+      cdkDropListGroup
+      [cdkDropListGroupDisabled]="!dragDropEnabled"
+      
       [style.gridTemplateColumns]="'repeat(' + primaryColumns.length + ', minmax(0, 1fr))'"
       [style.height.px]="timelineHeightPx">
 
@@ -115,7 +118,12 @@
             <!-- Each cell is (day, resource) regardless of axis order -->
             @for (s of secondaryColumns; track trackSecondary($index, s)) {
               <div class="ngx-cell"
-                #cellEl
+                cdkDropList
+                [cdkDropListDisabled]="!dragDropEnabled"
+                [cdkDropListSortingDisabled]="true"
+                [cdkDropListData]="{ primary: p, secondary: s }"
+                (cdkDropListDropped)="onCellDropped($event, p, s)"
+
                 [style.height.px]="timelineHeightPx"
                 [style.--today-bg]="getTodayBackgroundColor(p, s)"
                 [ngClass]="{ 'today': isToday(p, s) }"
@@ -145,22 +153,30 @@
                 <!-- events -->
                 <!-- ngClass and 2nd ngStyle are only used when user passes custom class/style -->
                 @for (e of cellEvents(p, s); track trackEvent($index, e)) {
-                  <div class="ngx-event"
-                    [ngStyle]="getEventLayoutStyle(e, p, s)"
-                    (click)="onEventClick(e, $event); $event.stopPropagation()"
-                    [ngClass]="eventClass ? eventClass(e) : null"
-                    [attr.title]="eventTooltip(e)">
-                    @if (eventTemplate) {
-                      <ng-container
-                        [ngTemplateOutlet]="eventTemplate"
-                        [ngTemplateOutletContext]="eventTemplateCtx(e, p, s)">
-                      </ng-container>
-                    } @else {
-                      <div class="ngx-event-title">{{ e.title }}</div>
-                      <div class="ngx-event-time">
-                        {{ toDisplayZone(e.start) | date:'HH:mm' }}–{{ toDisplayZone(e.end) | date:'HH:mm' }}
-                      </div>
-                    }
+                  <!-- Outer wrapper: Handles top/height/left/width layout ONLY -->
+                  <div class="ngx-event-wrapper" [ngStyle]="getEventLayoutStyle(e, p, s)">
+
+                    <!-- Inner element: Handles CDK Drag ONLY -->
+                    <div class="ngx-event"
+                      cdkDrag
+                      [cdkDragDisabled]="!dragDropEnabled"
+                      [cdkDragData]="e"
+                      (click)="onEventClick(e, $event); $event.stopPropagation()"
+                      [ngClass]="eventClass ? eventClass(e) : null"
+                      [attr.title]="eventTooltip(e)">
+
+                      @if (eventTemplate) {
+                        <ng-container
+                          [ngTemplateOutlet]="eventTemplate"
+                          [ngTemplateOutletContext]="eventTemplateCtx(e, p, s)">
+                        </ng-container>
+                      } @else {
+                        <div class="ngx-event-title">{{ e.title }}</div>
+                        <div class="ngx-event-time">
+                          {{ toDisplayZone(e.start) | date:'HH:mm' }}–{{ toDisplayZone(e.end) | date:'HH:mm' }}
+                        </div>
+                      }
+                    </div>
                   </div>
                 }
               </div>

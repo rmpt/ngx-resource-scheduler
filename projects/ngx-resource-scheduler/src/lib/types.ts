@@ -78,6 +78,15 @@ export interface SchedulerEventClick {
   nativeEvent: MouseEvent;
 }
 
+/** Emitted when the an event is dopped (dragDropEnabled must be true). */
+export interface EventDropped {
+  event: any;                 
+  toDayKey: string;
+  toResourceId: string;
+  newStart: Date;
+  newEnd: Date;
+}
+
 /** Emitted when the visible time range changes (startDate/days/view). */
 export interface SchedulerRangeChange {
   /** Inclusive start of visible range. */
@@ -95,3 +104,4 @@ export interface SchedulerRangeChange {
   /** Current view identifier (v1 uses custom-range). */
   view: SchedulerView;
 }
+

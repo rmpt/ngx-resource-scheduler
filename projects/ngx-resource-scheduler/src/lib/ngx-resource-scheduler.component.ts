@@ -9,9 +9,12 @@ import {
   TemplateRef,
   Inject,
   PLATFORM_ID,
+  booleanAttribute,
+  ChangeDetectorRef,
 } from '@angular/core';
 
 import {
+  EventDropped,
   PrimaryAxis,
   SchedulerEvent,
   SchedulerEventClick,
@@ -24,6 +27,7 @@ import {
 import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 import { PositionedEvent } from './internal/types-internal';
 import { isPlatformBrowser } from '@angular/common';
+import { CdkDrag, CdkDragDrop, CdkDragMove, CdkDropList } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -45,6 +49,7 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Input() showDaysLabel: boolean = true;
   @Input() showNdaysControl: boolean = true;
   @Input() showSwapPrimaryAxis: boolean = true;
+  @Input({ transform: booleanAttribute }) dragDropEnabled = true;
 
   // --- TIME WINDOW (vertical) ---
   @Input() dayStart: string = '08:00'; // HH:mm
@@ -87,6 +92,7 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   @Output() startDateChange = new EventEmitter<Date>();
   @Output() nDaysChange = new EventEmitter<number>();
   @Output() primaryAxisChange = new EventEmitter<PrimaryAxis>();
+  @Output() eventDropped = new EventEmitter<EventDropped>();
 
   // --- INTERNAL LAYOUT CONSTANTS ---
   readonly pxPerMinute = 2; // 120px per hour
@@ -102,7 +108,8 @@ export class NgxResourceSchedulerComponent implements OnChanges {
   slotMinutes = 30;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: object
+    @Inject(PLATFORM_ID) private platformId: object,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnChanges(_: SimpleChanges): void {
@@ -325,6 +332,104 @@ export class NgxResourceSchedulerComponent implements OnChanges {
     const columnDay = (dateColumn as any).day as Date;
     return this.compareYMD(this.todayDate, columnDay);
   }
+
+  // ---------- DRAG & DROP ----------
+
+  onCellDropped(
+    drop: CdkDragDrop<CellDropData>,
+    p: Column,
+    s: Column
+  ) {
+    // 1. Immediately reset CDK drag DOM transformations
+    drop.item.reset();
+
+    const e = drop.item.data as SchedulerEvent;
+    if (!e) return;
+
+    const toResourceId  = this.cellResourceId(p, s);
+    const toDay         = this.resolveCellDay(p, s);
+    const toDayKey      = this.dayKey(toDay);
+    const slotHeightPx  = this.slotMinutes * this.pxPerMinute; // e.g., 30m * 2px = 60px
+
+    // 2. Identify the target container
+    const targetCellEl = drop.container.element.nativeElement as HTMLElement;
+    const rect = targetCellEl.getBoundingClientRect();
+    const offsetY = drop.dropPoint?.y - rect.top;
+
+    // 3. Calculate which slot the mouse cursor is physically inside
+    let snappedOffsetMin: number;
+    if (this.snapToSlot && slotHeightPx > 0) {
+      // Floor to get the exact slot bucket containing the mouse pointer
+      const slotIndex = Math.floor(Math.max(0, offsetY) / slotHeightPx);
+      snappedOffsetMin = slotIndex * this.slotMinutes;
+    }
+    else {
+      snappedOffsetMin = Math.max(0, offsetY / this.pxPerMinute);
+    }
+
+    // 4. Preserve event duration
+    const originalDurationMs  = new Date(e.end).getTime() - new Date(e.start).getTime();
+    const durationMin         = originalDurationMs / 60000;
+    const windowDurationMin   = this.dayEndMinutes - this.dayStartMinutes;
+
+    // 5. Clamp within visible schedule boundaries
+    const clampedOffsetMin = Math.max(
+      0, 
+      Math.min(windowDurationMin - durationMin, snappedOffsetMin)
+    );
+
+    // 6. Base timestamp from windowBoundsUtc (100% aligned with styleForEvent)
+    const { startUtc: windowStartUtc } = this.windowBoundsUtc(toDay);
+    const newStartMs = windowStartUtc.getTime() + (clampedOffsetMin * 60000);
+    const newEndMs = newStartMs + originalDurationMs;
+
+    const newStart = new Date(newStartMs);
+    const newEnd = new Date(newEndMs);
+
+    // 7. Update event state
+    const updatedEvent: SchedulerEvent = {
+      ...e,
+      start: newStart,
+      end: newEnd,
+      resourceId: toResourceId
+    };
+
+    this.events = this.events.map(item => (item.id === e.id ? updatedEvent : item));
+
+    this.eventDropped.emit({
+      event: updatedEvent,
+      toDayKey,
+      toResourceId,
+      newStart,
+      newEnd
+    });
+  }
+
+  private pointerYToDateInCell(pointerY: number, cellEl: HTMLElement, day: Date): Date {
+    const rect = cellEl.getBoundingClientRect();
+  
+    // Vertical distance from the top of the target cell to the mouse pointer
+    const offsetY = (pointerY - rect.top) + cellEl.scrollTop;
+
+    // Total available minutes in the visible day window
+    const maxMinutesInWindow = this.dayEndMinutes - this.dayStartMinutes;
+
+    // Convert pixel offset directly using pxPerMinute
+    const rawMinutesFromStart = Math.max(0, Math.min(maxMinutesInWindow, offsetY / this.pxPerMinute));
+
+    // Snap to slot interval (e.g., 15m, 30m)
+    let snappedMinutes = rawMinutesFromStart;
+    if (this.snapToSlot && this.slotMinutes > 0) {
+      snappedMinutes = Math.round(rawMinutesFromStart / this.slotMinutes) * this.slotMinutes;
+    }
+
+    const finalMinutes = Math.min(this.dayEndMinutes, this.dayStartMinutes + snappedMinutes);
+
+    const base = this.startOfDay(day);
+    return this.setTime(base, finalMinutes);  
+  }
+
+
 
   // ---------- INTERNAL COMPUTATION ----------
 
@@ -772,4 +877,9 @@ export interface SchedulerHeaderTemplateContext {
 
   /** Current scheduler axis mode (days vs resources primary) */
   primaryAxis: PrimaryAxis;
+}
+
+interface CellDropData {
+  primary: Column;
+  secondary: Column;
 }
